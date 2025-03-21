@@ -3,7 +3,7 @@
 pragma solidity ^0.8.18;
 
 import "./utils/ERC721_lite.sol";
-import "./Company.sol"; // Update to the correct path if necessary
+import "./company.sol"; // Update to the correct path if necessary
 
 /**
  * @title Customer Satisfaction
