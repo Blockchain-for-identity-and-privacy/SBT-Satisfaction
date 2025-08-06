@@ -28,8 +28,9 @@ contract Company is ERC721_lite {
 
     /// @dev Struct used to store NFT metadata
     struct TokenMetadata {
+        address address_bottle; // Bottle address
         address address_company; // Address of the winery
-        address bottle_owner; // Owner of the bottle NFT
+        address bottle_owner; // Phisical owner of the bottle
         string name; // Name of the wine
         string description; // Description of the wine
         string capacity; // Capacity of the bottle
@@ -73,7 +74,7 @@ contract Company is ERC721_lite {
      * @return The registered bottle address.
      * @notice The address must be unique and cannot be the winery's address.
      */
-    function registerBottleAddress(address bottleAddress) public onlyCompanyAddress returns (address) {   
+    function registerBottleAddress(address bottleAddress) public onlyCompanyAddress returns (address) {
         require(bottleAddress != address(0), "Invalid address");
         require(!isValidBottle[bottleAddress], "Address already in use");
         require(bottleAddress != company_address, "A bottle cannot be associated with the winery's address");
@@ -89,7 +90,7 @@ contract Company is ERC721_lite {
     function setTokenURI(uint256 tokenId, TokenMetadata memory metadata) internal {
         tokenMetadata[tokenId] = metadata;
     }
-    
+
     /**
      * @dev Mints an NFT for a specific bottle account.
      * @param bottleAccount The address representing the bottle.
@@ -99,23 +100,24 @@ contract Company is ERC721_lite {
      * @notice The bottle account must be registered before minting.
      */
     function mint(
-        address bottleAccount, 
-        string memory description, 
-        string memory name, 
+        address bottleAccount,
+        string memory description,
+        string memory name,
         string memory capacity
     ) public onlyCompanyAddress {
-              
+
         require(bottleAccount != address(0), "Undefined address.");
         require(hasNFT[bottleAccount] == 0, "Token already assigned");
         require(isValidBottle[bottleAccount], "Unregistered bottle address");
-        
+
         uint256 currentbottleNFTId = bottleNFTId;
         bottleNFTId++;
         hasNFT[bottleAccount] = currentbottleNFTId;
 
         _mint(bottleAccount, currentbottleNFTId);
-        
+
         tokenMetadata[currentbottleNFTId] = TokenMetadata(
+            bottleAccount,
             company_address,
             address(0), // bottle_owner
             name,
