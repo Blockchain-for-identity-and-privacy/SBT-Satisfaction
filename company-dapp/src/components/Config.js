@@ -1,3 +1,7 @@
+/**
+ * @author Andrea Pinna <pinna.andrea@unica.it>
+ */
+
 import React, { useState } from 'react';
 
 const Config = ({

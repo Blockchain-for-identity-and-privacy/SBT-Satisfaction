@@ -6,7 +6,7 @@ import "./utils/ERC721_lite.sol";
 
 /**
  * @title Company
- * @author Andrea Tiddia, Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli - University of Cagliari 
+ * @author Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli, Andrea Tiddia, - University of Cagliari
  * @dev Smart contract that issues soulbound ERC721 tokens associated with bottles added to the system.
  */
  

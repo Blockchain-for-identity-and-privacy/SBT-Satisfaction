@@ -1,3 +1,7 @@
+/**
+ * @author Andrea Pinna <pinna.andrea@unica.it>
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom'; // Removed BrowserRouter import
 import Home from './components/Home';

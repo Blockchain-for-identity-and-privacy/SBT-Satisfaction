@@ -8,8 +8,9 @@ import "./company.sol"; // Update to the correct path if necessary
 /**
  * @title Customer Satisfaction
  * @dev Smart contract for issuing soulbound ERC721 tokens to certify customer satisfaction.
- * @author Andrea Tiddia, Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli - University of Cagliari 
- * @notice This contract allows customers to issue a satisfaction certificate to a winery after purchasing a bottle.
+ * @author Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli, Andrea Tiddia - University of Cagliari
+ * @notice This contract allows customers to issue a satisfaction certificate to a production company for a physically
+ owned product (e.g. a bottle of quality wine)
  */
  
 contract Customer_Satisfaction is ERC721_lite {

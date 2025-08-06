@@ -1,3 +1,7 @@
+/**
+ * @author Andrea Pinna <pinna.andrea@unica.it>
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ethers } from 'ethers';
 import QrScanner from 'qr-scanner';

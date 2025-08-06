@@ -1,4 +1,3 @@
-// src/utils/contractStorage.js
 const CONTRACTS_KEY = 'contractAddresses';
 
 export const saveContracts = (contracts) => {
