@@ -1,8 +1,6 @@
 # Soulbound tokens for customer satisfaction and digital property
 
-This software project is part of the study entitled  "Soulbound Tokens For Certifying Customer Satisfaction With 
-Quality Products" by Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli and Andrea Tiddia, from Department of 
-Mathematics and Computer Science, University of Cagliari.
+This software project is part of the study by Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli and Andrea Tiddia, from Department of Mathematics and Computer Science, University of Cagliari.
 
 The study was conducted following the Design Science Research method and includes this software project as a 
 proof-of-concept to investigate and answer two research questions.
