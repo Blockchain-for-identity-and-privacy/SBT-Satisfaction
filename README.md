@@ -21,10 +21,12 @@ mint certificates of satisfaction.
 
 Requirements:
 - This project requires Node.js to be installed on the server and MetaMask to be installed in the browser.
+  
 Usage:
 - Depoly the smart contracts Company and Customer_Satisfaction on a public blockchain and take note of their address.
 - Run each dApp using the command yarn start from their folder. 
 - Save the addresses of the deployed soulbound tokens via the configuration page.
+
 Features:  
 - Using the company dApp you can create a product account, mint the origin SBT and print the QR code label.
 - using the customer dApp you can scan a label and emit a satisfaction token. 
