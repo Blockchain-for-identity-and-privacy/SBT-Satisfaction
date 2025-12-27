@@ -865,7 +865,7 @@ textarea.form-input {
 }
 
 .metadata-grid {
-  display: grid;
+  display: list;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin: 1rem 0;

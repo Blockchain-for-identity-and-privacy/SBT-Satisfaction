@@ -12,7 +12,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
   const videoRef = useRef(null);
   const [scanResult, setScanResult] = useState('');
   const [scanner, setScanner] = useState(null);
-  const [bottleWallet, setBottleWallet] = useState(null);
+  const [productWallet, setProductWallet] = useState(null);
   const [tokenData, setTokenData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -66,7 +66,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
           result => {
             qrScanner.stop();
             setScanResult(result.data);
-            verifyBottle(result.data);
+            verifyProduct(result.data);
           },
           {
             highlightScanRegion: true,
@@ -83,7 +83,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
     }
   };
 
-  const verifyBottle = async (privateKey) => {
+  const verifyProduct = async (privateKey) => {
     try {
       setLoading(true);
       setError('');
@@ -101,8 +101,8 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
 
       // Create wallet from private key
       const wallet = new ethers.Wallet(formattedPk);
-      setBottleWallet(wallet);
-      const bottleAddress = wallet.address;
+      setProductWallet(wallet);
+      const productAddress = wallet.address;
 
       // Validate contract addresses
       if (!contracts.company) throw new Error('Company contract address not configured');
@@ -116,10 +116,10 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
       );
 
       // Get token metadata
-      const metadata = await companyContract.getTokenData(bottleAddress);
+      const metadata = await companyContract.getTokenData(productAddress);
       setTokenData({
         ...metadata,
-        bottleAddress
+        productAddress
       });
 
     } catch (err) {
@@ -130,30 +130,30 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
     }
   };
 
-  const setBottleOwner = async () => {
+  const setProductOwner = async () => {
     try {
       setLoading(true);
       setError('');
       setTxStatus('Preparing ownership transfer...');
 
-      if (!bottleWallet || !currentAccount || !contracts.company) {
+      if (!productWallet || !currentAccount || !contracts.company) {
         throw new Error('Missing required data for ownership transfer');
       }
 
       // Setup provider using MetaMask
       const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-      // Create signer with bottle's private key
-      const bottleSigner = new ethers.Wallet(
-        bottleWallet.privateKey,
+      // Create signer with product's private key
+      const productSigner = new ethers.Wallet(
+        productWallet.privateKey,
         provider
       );
 
-      // Create Company contract instance connected to bottle signer
+      // Create Company contract instance connected to product signer
       const companyContract = new ethers.Contract(
         contracts.company,
         CompanyABI,
-        bottleSigner
+        productSigner
       );
 
       setTxStatus('Sending ownership transfer transaction...');
@@ -172,7 +172,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
       setTxStatus('Ownership transferred successfully!');
 
       // Refresh token data to show updated owner
-      await verifyBottle(bottleWallet.privateKey);
+      await verifyProduct(productWallet.privateKey);
     } catch (err) {
       setError(`Ownership transfer failed: ${err.message}`);
       console.error('Transfer error:', err);
@@ -194,7 +194,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
   return (
     <div className="scan-container">
       <div className="connection-status">
-        <h2>Scan Bottle Label</h2>
+        <h2>Scan Product Label</h2>
         <div className={`wallet-display ${isConnected ? 'connected' : 'disconnected'}`}>
           {isConnected ? (
             <>
@@ -214,7 +214,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
 
       {!isConnected ? (
         <div className="connection-prompt">
-          <p>Please connect your wallet to scan bottles</p>
+          <p>Please connect your wallet to scan products</p>
         </div>
       ) : !scanResult ? (
         <div className="scanner-section">
@@ -239,8 +239,8 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
               </button>
             </div>
           ) : tokenData ? (
-            <div className="bottle-details">
-              <h3>Bottle Details</h3>
+            <div className="product-details">
+              <h3>Product Details</h3>
               <div className="metadata-grid">
                 <div className="metadata-item">
                   <strong>Name:</strong> {tokenData.name || 'N/A'}
@@ -252,23 +252,23 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
                   <strong>Capacity:</strong> {tokenData.capacity || 'N/A'}
                 </div>
                 <div className="metadata-item">
-                  <strong>Bottle Address:</strong> {tokenData.bottleAddress}
+                  <strong>Product Address:</strong> {tokenData.productAddress}
                 </div>
                 <div className="metadata-item">
-                  <strong>Current Owner:</strong> {tokenData.bottle_owner}
+                  <strong>Current Owner:</strong> {tokenData.product_owner}
                 </div>
                 <div className="metadata-item">
                   <strong>Company Address:</strong> {tokenData.address_company}
                 </div>
               </div>
 
-              {tokenData.bottle_owner !== currentAccount.toLowerCase() && (
+              {tokenData.product_owner !== currentAccount.toLowerCase() && (
                 <button
-                  onClick={setBottleOwner}
+                  onClick={setProductOwner}
                   disabled={loading}
                   className="transfer-button"
                 >
-                  {loading ? 'Processing...' : 'Set Me As Bottle Owner'}
+                  {loading ? 'Processing...' : 'Set Me As Product Owner'}
                 </button>
               )}
 
@@ -282,7 +282,7 @@ const ScanLabel = ({ currentAccount, connectWallet }) => {
                 onClick={() => setScanResult('')}
                 className="scan-again-button"
               >
-                Scan Another Bottle
+                Scan Another Product
               </button>
             </div>
           ) : null}

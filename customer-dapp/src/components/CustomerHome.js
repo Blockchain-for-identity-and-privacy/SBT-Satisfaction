@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import CustomerBottles from './CustomerBottles';
+import CustomerProducts from './CustomerProducts';
 
 const CustomerHome = ({
   currentAccount,
@@ -12,7 +12,7 @@ const CustomerHome = ({
   companyContractAddress,
   customerSatisfactionContractAddress
 }) => {
-  const [showBottles, setShowBottles] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
 
   return (
     <div className="home">
@@ -33,16 +33,16 @@ const CustomerHome = ({
         </Link>
         {currentAccount && (
           <button
-            onClick={() => setShowBottles(!showBottles)}
+            onClick={() => setShowProducts(!showProducts)}
             className="scan-button"
           >
-            {showBottles ? 'Hide My Bottles' : 'My Digital Properties'}
+            {showProducts ? 'Hide My Products' : 'My Digital Properties'}
           </button>
         )}
       </div>
 
-      {showBottles && currentAccount && (
-        <CustomerBottles
+      {showProducts && currentAccount && (
+        <CustomerProducts
           currentAccount={currentAccount}
           companyContractAddress={companyContractAddress}
           customerSatisfactionContractAddress={customerSatisfactionContractAddress}
