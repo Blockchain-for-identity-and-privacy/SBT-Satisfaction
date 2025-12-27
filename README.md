@@ -1,4 +1,4 @@
-# Soulbound tokens for customer satisfaction and digital property
+# Product accounts and Soulbound tokens for certify customer satisfaction, digital ownership, and reputation
 
 This software project is part of the study by Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli and Andrea Tiddia, from Department of Mathematics and Computer Science, University of Cagliari.
 
