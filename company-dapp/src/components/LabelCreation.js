@@ -18,7 +18,7 @@ const LabelCreation = () => {
 
   // Key management state
   const [privateKey, setPrivateKey] = useState('');
-  const [bottleAddress, setBottleAddress] = useState('');
+  const [productAddress, setProductAddress] = useState('');
   const [useExistingAddress, setUseExistingAddress] = useState(false);
 
   // Mint form state
@@ -51,14 +51,14 @@ const LabelCreation = () => {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 
-  const registerBottleAddress = async () => {
-    if (!bottleAddress || !contracts.company) {
-      setTxStatus('Please generate or enter a bottle address and ensure Company contract is configured');
+  const registerProductAddress = async () => {
+    if (!productAddress || !contracts.company) {
+      setTxStatus('Please generate or enter a product address and ensure Company contract is configured');
       return;
     }
 
     try {
-      setTxStatus('Registering bottle address...');
+      setTxStatus('Registering product address...');
 
       if (!window.ethereum) {
         throw new Error('MetaMask is not installed');
@@ -73,26 +73,26 @@ const LabelCreation = () => {
       const signer = provider.getSigner();
       const companyContract = new ethers.Contract(contracts.company, CompanyABI, signer);
 
-      const tx = await companyContract.registerBottleAddress(bottleAddress);
+      const tx = await companyContract.registerProductAddress(productAddress);
       setTxStatus('Transaction sent, waiting for confirmation...');
 
       await tx.wait();
-      setTxStatus('Bottle address registered successfully!');
+      setTxStatus('Product address registered successfully!');
 
     } catch (error) {
-      console.error('Error registering bottle address:', error);
+      console.error('Error registering product address:', error);
       setTxStatus(`Error: ${error.message}`);
     }
   };
 
-  const mintBottle = async () => {
-    if (!bottleAddress || !contracts.company || !name || !description || !capacity) {
+  const mintProduct = async () => {
+    if (!productAddress || !contracts.company || !name || !description || !capacity) {
       setTxStatus('Please fill all fields and ensure Company contract is configured');
       return;
     }
 
     try {
-      setTxStatus('Minting bottle NFT...');
+      setTxStatus('Minting product NFT...');
       setMintSuccess(false);
 
       if (!window.ethereum) {
@@ -109,7 +109,7 @@ const LabelCreation = () => {
       const companyContract = new ethers.Contract(contracts.company, CompanyABI, signer);
 
       const tx = await companyContract.mint(
-        bottleAddress,
+        productAddress,
         description,
         name,
         capacity
@@ -117,11 +117,11 @@ const LabelCreation = () => {
       setTxStatus('Mint transaction sent, waiting for confirmation...');
 
       await tx.wait();
-      setTxStatus('Bottle NFT minted successfully!');
+      setTxStatus('Product NFT minted successfully!');
       setMintSuccess(true);
 
     } catch (error) {
-      console.error('Error minting bottle NFT:', error);
+      console.error('Error minting product NFT:', error);
       setTxStatus(`Error: ${error.message}`);
       setMintSuccess(false);
     }
@@ -147,7 +147,7 @@ const LabelCreation = () => {
     </div>
 
     <div className="section">
-      <h3>1. Bottle Address</h3>
+      <h3>1. Product Address</h3>
 
       <div className="toggle-group">
         <button
@@ -170,7 +170,7 @@ const LabelCreation = () => {
             onClick={() => {
               const wallet = ethers.Wallet.createRandom();
               setPrivateKey(wallet.privateKey);
-              setBottleAddress(wallet.address);
+              setProductAddress(wallet.address);
             }}
             className="generate-button"
           >
@@ -191,7 +191,7 @@ const LabelCreation = () => {
                 <label>Public Address:</label>
                 <input
                   type="text"
-                  value={bottleAddress}
+                  value={productAddress}
                   readOnly
                   className="key-input"
                 />
@@ -201,33 +201,33 @@ const LabelCreation = () => {
         </>
       ) : (
         <div className="form-group">
-          <label>Existing Bottle Address:</label>
+          <label>Existing Product Address:</label>
           <input
             type="text"
-            value={bottleAddress}
-            onChange={(e) => setBottleAddress(e.target.value)}
+            value={productAddress}
+            onChange={(e) => setProductAddress(e.target.value)}
             placeholder="0x..."
             className="form-input"
           />
         </div>
       )}
 
-      {bottleAddress && contracts.company && (
+      {productAddress && contracts.company && (
         <button
-          onClick={registerBottleAddress}
+          onClick={registerProductAddress}
           className="action-button mint-button"
-          disabled={!bottleAddress || !contracts.company}
+          disabled={!productAddress || !contracts.company}
         >
-          Register Bottle Address
+          Register Product Address
         </button>
       )}
     </div>
 
     <div className="section">
-      <h3>2. Bottle Details</h3>
+      <h3>2. Product Details</h3>
 
       <div className="form-group">
-        <label>Bottle Name:</label>
+        <label>Product Name:</label>
         <input
           type="text"
           value={name}
@@ -242,14 +242,14 @@ const LabelCreation = () => {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Detailed description of the bottle"
+          placeholder="Detailed description of the product"
           className="form-input"
           rows="4"
         />
       </div>
 
       <div className="form-group">
-        <label>Capacity:</label>
+        <label>Dimension (Size or Capacity):</label>
         <input
           type="text"
           value={capacity}
@@ -260,11 +260,11 @@ const LabelCreation = () => {
       </div>
 
       <button
-        onClick={mintBottle}
+        onClick={mintProduct}
         className="action-button mint-button"
-        disabled={!bottleAddress || !contracts.company || !name || !description || !capacity}
+        disabled={!productAddress || !contracts.company || !name || !description || !capacity}
       >
-        Mint Bottle NFT
+        Mint Product NFT
       </button>
     </div>
 
@@ -272,7 +272,7 @@ const LabelCreation = () => {
       <div className="section">
         <h3>3. Label Generation</h3>
         <div className="qr-container">
-          <h4>Bottle Authentication QR Code</h4>
+          <h4>Product Authentication QR Code</h4>
           <div className="qr-code">
             <QRCodeSVG
               value={privateKey}
@@ -293,7 +293,7 @@ const LabelCreation = () => {
             <h2>{name}</h2>
             <p><strong>Description:</strong> {description}</p>
             <p><strong>Capacity:</strong> {capacity}</p>
-            <p><strong>Bottle Address:</strong> {bottleAddress}</p>
+            <p><strong>Product Address:</strong> {productAddress}</p>
             <div className="print-qr">
               <QRCodeSVG
                 value={privateKey}

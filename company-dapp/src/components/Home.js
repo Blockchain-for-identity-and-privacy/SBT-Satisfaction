@@ -8,7 +8,7 @@ const Home = ({ currentAccount, connectWallet, customerSatisfactionContractAddre
 
   return (
     <div className="home">
-      <h1>Best Wine Company</h1>
+      <h1>My Manufacturing Company</h1>
       <div className="wallet-info">
         {currentAccount ? (
           <p>Connected with: {currentAccount}</p>

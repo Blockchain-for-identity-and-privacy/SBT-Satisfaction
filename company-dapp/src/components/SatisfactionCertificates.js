@@ -44,9 +44,9 @@ const SatisfactionCertificates = ({ currentAccount, customerSatisfactionContract
             const metadata = await contract.tokenMetadata(tokenId);
             return {
               tokenId: tokenId.toNumber(),
-              bottleOwner: metadata.bottle_owner,
+              productOwner: metadata.product_owner,
               companyAddress: metadata.company_Address,
-              bottleAddress: metadata.bottle_address
+              productAddress: metadata.product_address
             };
           })
         );
@@ -94,14 +94,14 @@ const SatisfactionCertificates = ({ currentAccount, customerSatisfactionContract
             <div key={cert.tokenId} className="certificate-card">
               <h4>Certificate #{cert.tokenId}</h4>
               <div className="certificate-details">
-                <strong>Bottle Owner:</strong>
-                <p>{cert.bottleOwner}</p>
+                <strong>Product Owner:</strong>
+                <p>{cert.productOwner}</p>
 
                 <strong>Company Address:</strong>
                 <p>{cert.companyAddress}</p>
 
-                <strong>Bottle Address:</strong>
-                <p>{cert.bottleAddress}</p>
+                <strong>Product Address:</strong>
+                <p>{cert.productAddress}</p>
               </div>
             </div>
           ))
