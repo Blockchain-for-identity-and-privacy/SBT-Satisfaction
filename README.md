@@ -29,6 +29,6 @@ Usage:
 
 Features:  
 - Using the company dApp you can create a product account, mint the origin SBT and print the QR code label.
-- using the customer dApp you can scan a label and emit a satisfaction token. 
+- using the customer dApp you can scan a label and mint a satisfaction token. 
 
 
