@@ -9,17 +9,16 @@ import "./company.sol"; // Update to the correct path if necessary
  * @title Customer Satisfaction
  * @dev Smart contract for issuing soulbound ERC721 tokens to certify customer satisfaction.
  * @author Andrea Pinna, Maria Ilaria Lunesu, Roberto Tonelli, Andrea Tiddia - University of Cagliari
- * @notice This contract allows customers to issue a satisfaction certificate to a production company for a physically
- owned product (e.g. a bottle of quality wine)
+ * @notice This contract allows customers to issue a satisfaction certificate to a manufacturing company for a 
+   physically owned product (e.g. a unit of a quality product)
  */
- 
 contract Customer_Satisfaction is ERC721_lite {
 
     uint256 satisfNFTId = 1; // Token ID counter for the contract
 
-    mapping(address => uint256) public mintedSatisfToken; // Tracks if a bottle already has a satisfaction token
+    mapping(address => uint256) public mintedSatisfToken; // Tracks if a product already has a satisfaction token
     mapping(uint256 => TokenMetadata) public tokenMetadata; // Maps metadata to each token in the system
-    mapping(address => uint256) public companyCertificateCount; // Tracks the number of tokens minted for each company
+    mapping(address => uint256[]) public companyCertificates; // Tracks the tokens ID minted for each company
 
     /**
      * @dev Emitted when a satisfaction certificate is issued.
@@ -35,14 +34,14 @@ contract Customer_Satisfaction is ERC721_lite {
 
     /**
      * @dev Struct representing the metadata associated with a satisfaction token.
-     * @param bottle_owner The address of the customer who owns the bottle.
-     * @param company_Address The address of the wine company that issued the bottle.
-     * @param bottle_address The address of the bottle associated with the certificate.
+     * @param product_owner The address of the customer who owns the product.
+     * @param company_Address The address of the manufacturing company that issued the product.
+     * @param product_address The address of the product associated with the certificate.
      */
     struct TokenMetadata {
-        address bottle_owner;
+        address product_owner;
         address company_Address;
-        address bottle_address;
+        address product_address;
     }
 
     /**
@@ -62,29 +61,31 @@ contract Customer_Satisfaction is ERC721_lite {
     }
 
     /**
-     * @notice Issues a satisfaction NFT to the company associated with the bottle.
-     * @dev A customer can mint a satisfaction NFT only if they are the bottle's owner.
+     * @notice Issues a satisfaction NFT to the company associated with the product.
+     * @dev A customer can mint a satisfaction NFT only if they are the product's owner.
      * @param companyContract The address of the company's smart contract.
-     * @param bottleAddress The address of the bottle for which the certificate is issued.
+     * @param productAddress The address of the product for which the certificate is issued.
      */
-    function mint(address companyContract, address bottleAddress) public {
-        require(mintedSatisfToken[bottleAddress] == 0, "Token already issued for this bottle");
+    function mint(address companyContract, address productAddress) public {
+        require(mintedSatisfToken[productAddress] == 0, "Token already issued for this product");
 
         Company cc = Company(companyContract);
-        require(cc.getOwnerOf(bottleAddress) == msg.sender, "You are not the owner of this bottle");
+        require(cc.getOwnerOf(productAddress) == msg.sender, "You are not the owner of this product");
 
         address companyAddress = cc.getCompanyAddress();
 
         uint256 currentSatisfNFTId = satisfNFTId;
         satisfNFTId++;
-        mintedSatisfToken[bottleAddress] = currentSatisfNFTId;
+        mintedSatisfToken[productAddress] = currentSatisfNFTId;
 
         _mint(companyAddress, currentSatisfNFTId); // Assign a new token to the company
 
+        companyCertificates[companyAddress].push(currentSatisfNFTId);
+
         tokenMetadata[currentSatisfNFTId] = TokenMetadata(
-            msg.sender,     // Customer (bottle owner)
-            companyAddress, // Wine company
-            bottleAddress   // Product (bottle)
+            msg.sender,     // Customer (product owner)
+            companyAddress, // Manufacturing company
+            productAddress   // Product (product)
         );
 
         emit SatisfactionCertificateLog(
@@ -107,19 +108,10 @@ contract Customer_Satisfaction is ERC721_lite {
      * @param companyAddress The address of the company.
      * @return The number of certificates associated with the company.
      */
-    function getNumberOfCertificatesByCompany(address companyAddress) public view returns (uint256) {
-        return companyCertificateCount[companyAddress];
+    function getCertificatesByCompany(address companyAddress) public view returns (uint256[] memory) {
+        return companyCertificates[companyAddress];
     }
 
-    /**
-     * @notice Retrieves the metadata associated with a specific certificate.
-     * @dev Function is currently not returning data; should be updated to return `TokenMetadata`.
-     * @param tokenID The ID of the certificate token.
-     */
-    function getCertificatesMetadata(uint256 tokenID) public view {
-        // return tokenMetadata[tokenID]; // Uncomment to enable metadata retrieval
-    }
-    
     /**
      * @dev Ensures the token remains soulbound (non-transferable).
      * @param from The address attempting to transfer the token.
@@ -144,3 +136,4 @@ contract Customer_Satisfaction is ERC721_lite {
     
     
 }
+
